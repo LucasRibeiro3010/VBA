@@ -1,0 +1,11 @@
+
+'Sheets("Paramentos") -> é o nome da aba onde quero salva o nome do arquivo
+'Range("C6") - > é a celula onde quero gravar o nome do arquvio.
+
+
+Private Sub Workbook_Open()
+    ' Sempre que o arquivo for aberto, grava o caminho completo dele
+    ThisWorkbook.Sheets("Parametros").Range("C6").Value = ThisWorkbook.FullName
+End Sub
+
+
