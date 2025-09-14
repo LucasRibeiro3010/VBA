@@ -1,0 +1,40 @@
+Private Sub Workbook_Open()
+    Dim caminhoLocal As String
+    Dim caminhoPasta As String
+    Dim nomeArquivo As String
+    Dim OneDrivePessoal As String
+    Dim partes() As String
+    Dim i As Long
+
+    ' Caminho completo do arquivo
+    caminhoLocal = ThisWorkbook.FullName
+    nomeArquivo = ThisWorkbook.Name
+
+    ' Tenta pegar o caminho da nuvem pessoal
+    OneDrivePessoal = Environ("OneDriveConsumer")
+    If OneDrivePessoal = "" Then
+        ' Se não encontrar, tenta o comercial como fallback
+        OneDrivePessoal = Environ("OneDriveCommercial")
+    End If
+
+    ' Se o caminho for web do OneDrive, converte para caminho local
+    If Left(caminhoLocal, 5) = "https" Then
+        partes = Split(Mid(caminhoLocal, 9), "/")
+        
+        ' Reconstrói o caminho local
+        caminhoPasta = OneDrivePessoal
+        For i = 2 To UBound(partes) - 1 ' -1 para não incluir o nome do arquivo
+            caminhoPasta = caminhoPasta & "\" & partes(i)
+        Next i
+    Else
+        ' Se já for caminho local
+        caminhoPasta = ThisWorkbook.Path
+    End If
+
+    ' Grava o caminho da pasta e o nome do arquivo nas células
+    With ThisWorkbook.Sheets("Parametros")
+        .Range("C6").Value = caminhoPasta
+        .Range("C7").Value = nomeArquivo
+    End With
+End Sub
+
